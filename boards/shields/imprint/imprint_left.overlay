@@ -1,5 +1,17 @@
 #include "imprint.dtsi"
 
+&imprint_function_row { // The matrix transform for this board is 7 rows down because the left half is 7 rows tall according to the matrix.
+    row-offset = <7>;
+};
+
+&imprint_function_row_full_bottom_row {
+    row-offset = <7>;
+};
+
+&dactyl_manuform_number_row {
+    row-offset = <7>;
+};
+
 &kscan0 {
     row-gpios
         = <&gpio1 4 GPIO_ACTIVE_HIGH> // row0 from schematic
@@ -12,15 +24,11 @@
         ;
 };
 
-&trackball_peripheral_listener {
-    status = "okay";
-};
-
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 &spi1 {
     cs-gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
 
-    trackball_central: trackball_central@0 {
+    trackball_peripheral: trackball_peripheral@0 {
         status = "okay";
         compatible = "pixart,pmw3610";
         reg = <0>;
@@ -33,8 +41,7 @@
     };
 };
 
-// Overrides for the input listener node
-&trackball_central_listener {
-    status = "okay";
-    device = <&trackball_central>;
+// Overrides for the input-split child node
+&trackball_peripheral_split {
+    device = <&trackball_peripheral>;
 };
